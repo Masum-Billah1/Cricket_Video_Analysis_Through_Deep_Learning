@@ -1,0 +1,24 @@
+# from moviepy.editor import *
+
+from moviepy.video.io.VideoFileClip import VideoFileClip
+
+
+def extract_video_clip(input_path, output_path, start_time, end_time):
+    # Load the video clip
+    video_clip = VideoFileClip(input_path)
+
+    # Extract the specified clip
+    clip = video_clip.subclip(start_time, end_time)
+
+    # Write the clip to a new file
+    clip.write_videofile(output_path, codec="libx264", audio_codec="aac")
+
+
+# Example usage
+count = 0;
+input_video_path = "one_minute.mp4"
+output_video_path = f"{count:d}clipped_video.mp4"
+start_time_seconds = 10
+end_time_seconds = 20
+
+extract_video_clip(input_video_path, output_video_path, start_time_seconds, end_time_seconds)
