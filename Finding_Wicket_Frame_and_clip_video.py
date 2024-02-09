@@ -1,4 +1,17 @@
 import re
+import os
+from moviepy.video.io.VideoFileClip import VideoFileClip
+
+def extract_video_clip(input_path, output_path, start_time, end_time):
+    # Load the video clip
+    video_clip = VideoFileClip(input_path)
+
+    # Extract the specified clip
+    clip = video_clip.subclip(start_time, end_time)
+
+    # Write the clip to a new file
+    clip.write_videofile(output_path, codec="libx264", audio_codec="aac")
+
 
 def extract_numbers_from_string(input_string):
     # Define the pattern for extracting numbers
@@ -36,18 +49,28 @@ def read_and_group_data(filename):
     return data_3d_array
 
 # Specify the file name
-filename = "scores2.txt"
+filename = "scores.txt"
 
 # Call the function to read, group, and sort the data
 sorted_data = read_and_group_data(filename)
 
-# print(sorted_data)
-
 temp = 0
+count = 0
 wicket = []
 for entry in sorted_data:
-    if temp!=entry[2]:
+    if temp != entry[2]:
         wicket.append(entry[0])
         temp = entry[2]
 
-print(wicket)
+input_video_path = "input.mp4"
+
+# Create a directory to store the clipped videos if it doesn't exist
+output_folder = "clipped_videos"
+os.makedirs(output_folder, exist_ok=True)
+
+for i in range(len(wicket)):
+    output_video_path = os.path.join(output_folder, f"Clipped_video{count:d}.mp4")
+    start_time_seconds = wicket[i] - 20
+    end_time_seconds = wicket[i]
+    count += 1
+    extract_video_clip(input_video_path, output_video_path, start_time_seconds, end_time_seconds)
